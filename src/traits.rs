@@ -62,7 +62,33 @@ impl Summary for Tweet {
     }
 }
 
+pub trait Calculator {
+    fn calc(&self) -> anyhow::Result<u64>;
+}
+
+pub struct Rectangle {
+    width: u64,
+    height: u64,
+}
+
+impl Calculator for Rectangle {
+    fn calc(&self) -> anyhow::Result<u64> {
+        Ok(self.height * self.width)
+    }
+}
+
+fn use_rectangle() {
+    let r = Rectangle {
+        width: 100,
+        height: 50,
+    };
+    let result = r.calc();
+    println!("面積 = {}", result.unwrap());
+}
+
 pub fn run() {
+    use_rectangle();
+
     let apple = Apple {};
     let banana = Banana {};
 
