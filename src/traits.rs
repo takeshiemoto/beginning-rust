@@ -1,5 +1,13 @@
 // 複数の型に対して共通の振る舞いを持たせたい
 
+use csv::ReaderBuilder;
+use serde::de::DeserializeOwned;
+use serde::Deserialize;
+use std::fs::{read_to_string, File};
+use std::io::BufReader;
+use std::marker::PhantomData;
+use std::path::PathBuf;
+
 trait Fruits {
     fn price(&self) -> u32;
 }
@@ -131,4 +139,91 @@ fn notify(item: &impl Summary) {
 fn notify_another(item: &(impl Summary + Message)) {
     println!("Breaking news! {}", item.summarize());
     println!("Message {}", item.message());
+}
+
+pub trait CsvReader<T>
+where
+    T: DeserializeOwned,
+{
+    /// ## 読み取り
+    /// ### 引数 file_path:ファイルパス
+    /// ### 戻り値 Result<Vec<T>> 読み取り結果
+    fn read(&self, file_path: &str) -> anyhow::Result<Vec<T>>;
+}
+
+pub trait JsonReader<T>
+where
+    T: DeserializeOwned,
+{
+    /// ## 読み取り
+    /// ### 引数 file_path:ファイルパス
+    /// ### 戻り値 Result<Vec<T>> 読み取り結果
+    fn read(&self, file_path: &str) -> anyhow::Result<Vec<T>>;
+}
+
+#[derive(Default)]
+pub struct CsvReaderImpl<T> {
+    phantom: PhantomData<T>,
+}
+impl<T> CsvReader<T> for CsvReaderImpl<T>
+where
+    T: DeserializeOwned,
+{
+    fn read(&self, file_path: &str) -> anyhow::Result<Vec<T>> {
+        let path_buf = PathBuf::from(file_path);
+        let string_data = read_to_string(path_buf)?;
+        let mut reader = ReaderBuilder::new()
+            .delimiter(b',')
+            .from_reader(string_data.as_bytes());
+        let rows = reader.deserialize::<T>();
+        let mut result = Vec::<T>::new();
+        for row in rows {
+            result.push(row?);
+        }
+
+        Ok(result)
+    }
+}
+
+#[derive(Default)]
+pub struct JsonReaderImpl<T> {
+    phantom: PhantomData<T>,
+}
+impl<T> JsonReader<T> for JsonReaderImpl<T>
+where
+    T: DeserializeOwned,
+{
+    fn read(&self, file_path: &str) -> anyhow::Result<Vec<T>> {
+        let path_buf = PathBuf::from(file_path);
+        let buf_reader = File::open(path_buf).map(|file| BufReader::new(file))?;
+        let result = serde_json::from_reader(buf_reader)?;
+        Ok(result)
+    }
+}
+
+#[derive(Debug, Default, Deserialize)]
+pub struct Product {
+    pub id: String,
+    pub name: String,
+    pub price: u32,
+}
+
+#[allow(dead_code)]
+pub fn use_generics_method() {
+    let csv_path = concat!(env!("CARGO_MANIFEST_DIR"), "product.csv");
+    let json_path = concat!(env!("CARGO_MANIFEST_DIR"), "product.json");
+
+    let csv_method = CsvReaderImpl::<Product>::default();
+    let json_method = JsonReaderImpl::<Product>::default();
+
+    let csv_result = csv_method.read(csv_path).unwrap();
+    let json_result = json_method.read(json_path).unwrap();
+
+    for result in csv_result {
+        println!("{:?}", result);
+    }
+
+    for result in json_result {
+        println!("{:?}", result);
+    }
 }
