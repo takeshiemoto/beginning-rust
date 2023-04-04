@@ -145,6 +145,7 @@ pub trait CsvReader<T>
 where
     T: DeserializeOwned,
 {
+    type Entity;
     /// ## 読み取り
     /// ### 引数 file_path:ファイルパス
     /// ### 戻り値 Result<Vec<T>> 読み取り結果
@@ -155,6 +156,7 @@ pub trait JsonReader<T>
 where
     T: DeserializeOwned,
 {
+    type Entity;
     /// ## 読み取り
     /// ### 引数 file_path:ファイルパス
     /// ### 戻り値 Result<Vec<T>> 読み取り結果
@@ -169,6 +171,7 @@ impl<T> CsvReader<T> for CsvReaderImpl<T>
 where
     T: DeserializeOwned,
 {
+    type Entity = T;
     fn read(&self, file_path: &str) -> anyhow::Result<Vec<T>> {
         let path_buf = PathBuf::from(file_path);
         let string_data = read_to_string(path_buf)?;
@@ -193,6 +196,7 @@ impl<T> JsonReader<T> for JsonReaderImpl<T>
 where
     T: DeserializeOwned,
 {
+    type Entity = T;
     fn read(&self, file_path: &str) -> anyhow::Result<Vec<T>> {
         let path_buf = PathBuf::from(file_path);
         let buf_reader = File::open(path_buf).map(|file| BufReader::new(file))?;
