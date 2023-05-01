@@ -3,6 +3,7 @@ mod default_trait;
 mod display_trait;
 mod traits;
 mod vers;
+mod partial_eq;
 
 fn main() {
     // vers::run();
