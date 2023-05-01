@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 
-pub struct Person {
+struct Person {
     pub name: String,
     pub age: u32,
 }
