@@ -1,9 +1,10 @@
 mod debug_trait;
 mod default_trait;
 mod display_trait;
+mod partial_eq;
+mod test_target;
 mod traits;
 mod vers;
-mod partial_eq;
 
 fn main() {
     // vers::run();
