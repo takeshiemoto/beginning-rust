@@ -1,5 +1,7 @@
 use crate::test_target::Guest;
 
+mod closure;
+mod closure_2;
 mod debug_trait;
 mod default_trait;
 mod display_trait;
