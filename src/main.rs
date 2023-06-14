@@ -5,6 +5,7 @@ mod closure_2;
 mod debug_trait;
 mod default_trait;
 mod display_trait;
+mod iter;
 mod partial_eq;
 mod test_target;
 mod traits;
