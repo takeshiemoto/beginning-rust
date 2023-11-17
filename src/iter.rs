@@ -5,6 +5,27 @@ pub fn run() {
     for val in v_iter {
         println!("Got: {}", val);
     }
+
+    algorithm_one();
+    sum_even();
+}
+
+fn algorithm_one() {
+    let mut sum = 0;
+    for n in 1..=3 {
+        sum += n;
+    }
+    println!("{}", sum);
+}
+
+fn sum_even() {
+    let mut sum = 0;
+    for n in 1..=100 {
+        if n % 2 == 0 {
+            sum += n;
+        }
+    }
+    println!("{}", sum);
 }
 
 #[test]
