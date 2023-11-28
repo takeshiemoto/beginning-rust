@@ -11,6 +11,7 @@ mod summarize;
 mod test_target;
 mod traits;
 mod vers;
+mod web;
 
 fn main() {
     // vers::run();
@@ -22,6 +23,6 @@ fn main() {
     // let guest = Guest::new(33, true);
     // println!("{:?}", guest.calc_fee())
     // summarize::run();
-
-    iter::run();
+    // iter::run();
+    web::run();
 }
