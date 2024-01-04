@@ -12,6 +12,7 @@ mod test_target;
 mod traits;
 mod vers;
 mod web;
+mod algorithm_search;
 
 fn main() {
     // vers::run();
