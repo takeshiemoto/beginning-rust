@@ -1,9 +1,11 @@
 use crate::test_target::Guest;
 
+mod algorithm_search;
 mod closure;
 mod closure_2;
 mod debug_trait;
 mod default_trait;
+mod derive;
 mod display_trait;
 mod iter;
 mod partial_eq;
@@ -12,7 +14,6 @@ mod test_target;
 mod traits;
 mod vers;
 mod web;
-mod algorithm_search;
 
 fn main() {
     // vers::run();
@@ -25,5 +26,6 @@ fn main() {
     // println!("{:?}", guest.calc_fee())
     // summarize::run();
     // iter::run();
-    web::run();
+    // web::run();
+    derive::run();
 }
